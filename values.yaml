@@ -1,0 +1,41 @@
+replicaCount: 1
+
+image:
+  registry: your-registry
+  name: auth
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  host: auth.homelab.com
+  annotations:
+    cert-manager.io/cluster-issuer: homelab-ca-issuer
+
+config:
+  environment: "default"
+  jwtAlgorithm: "HS256"
+  jwtExpirationMinutes: "1440"
+
+database:
+  host: "postgresql"
+  port: "5432"
+  name: "auth"
+  user: "cluster_user"
+  secretName: "app-production-secret"
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "250m"
+
+middleware:
+  enabled: true
