@@ -1,5 +1,0 @@
-config:
-  environment: "production"
-
-ingress:
-  host: auth.homelab.com

@@ -1,5 +1,5 @@
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
 from passlib.hash import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,10 +17,12 @@ app = FastAPI(
     description="Simple auth app kubernetes ingress api auth",
     version="0.1.0")
 
-# app.include_router(router)
+router = APIRouter(tags=["auth"])
+
+app.include_router(router)
 
 
-@app.get("/health")
+@router.get("/health")
 def health_check():
     """Health check endpoint."""
     return {
@@ -29,7 +31,7 @@ def health_check():
     }
 
 
-@app.post("/register", response_model=UserResponse)
+@router.post("/register", response_model=UserResponse)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     existing_with_displayed_name = await db.execute(
             select(User)
@@ -60,7 +62,7 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
     return new_user
 
 
-@app.post("/login", response_model=BearerTokenResponse)
+@router.post("/login", response_model=BearerTokenResponse)
 async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     result = await db.execute(
         select(User)
@@ -83,14 +85,14 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     return BearerTokenResponse(access_token=token)
 
 
-@app.post("/google-login")
+@router.post("/google-login")
 async def google_login(
     body: LoginRequest,
     user_management_service: UserManagementService = Depends(get_user_management_service)):
     return await user_management_service.login_with_google(body)
 
 
-@app.get("/verify")
+@router.get("/verify")
 async def verify(request: Request, response: Response):
     auth = request.headers.get("Authorization")
     if not auth or not auth.startswith("Bearer "):

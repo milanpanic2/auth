@@ -1,8 +1,0 @@
-config:
-  environment: "development"
-
-database:
-  secretName: "app-development-secret"
-
-ingress:
-  host: auth-dev.homelab.com

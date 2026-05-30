@@ -27,7 +27,7 @@ database:
   port: "5432"
   name: "auth"
   user: "cluster_user"
-  secretName: "app-production-secret"
+  secretName: "cluster-secret"
 
 resources:
   requests:
