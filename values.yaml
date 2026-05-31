@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  registry: your-registry
+  registry: ghcr.io/milanpanic2
   name: auth
   tag: latest
   pullPolicy: Always
