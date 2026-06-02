@@ -42,28 +42,3 @@ spec:
           {{- toYaml .Values.probes.liveness | nindent 10 }}
         readinessProbe:
           {{- toYaml .Values.probes.readiness | nindent 10 }}
-      initContainers:
-      - name: init-db
-        image: postgres:16
-        env:
-          - name: PGUSER
-            value: {{ .Values.database.user | quote }}
-          - name: PGDATABASE
-            value: "postgres"
-          - name: PGPASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ .Values.database.secretName }}
-                key: password
-        command:
-          - sh
-          - -c
-          - |
-            psql -h {{ .Values.database.host }} -c "CREATE DATABASE {{ .Values.database.name }}" || true
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "100m"
-          limits:
-            memory: "128Mi"
-            cpu: "200m"
