@@ -24,6 +24,7 @@ config:
   environment: "default"
   jwtAlgorithm: "HS256"
   jwtExpirationMinutes: "1440"
+  otelEndpoint: "http://alloy.monitoring.svc.cluster.local:4317"
 
 database:
   host: "postgresql"

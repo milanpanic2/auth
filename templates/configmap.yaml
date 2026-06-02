@@ -16,3 +16,4 @@ data:
   POSTGRESQL_PORT: {{ .Values.database.port | quote }}
   POSTGRESQL_DB_NAME: {{ .Values.database.name | quote }}
   POSTGRESQL_USER: {{ .Values.database.user | quote }}
+  OTEL_ENDPOINT: {{ .Values.config.otelEndpoint | quote }}
