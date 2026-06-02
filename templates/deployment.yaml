@@ -48,6 +48,8 @@ spec:
         env:
           - name: PGUSER
             value: {{ .Values.database.user | quote }}
+          - name: PGDATABASE
+            value: "postgres"
           - name: PGPASSWORD
             valueFrom:
               secretKeyRef:
