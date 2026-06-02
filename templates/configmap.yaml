@@ -1,15 +1,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: auth-config
+  name: {{ .Chart.Name }}-config
   namespace: {{ .Release.Namespace }}
   labels:
-    app: auth
+    app: {{ .Chart.Name }}
 data:
+  APP_HOST: {{ .Values.config.appHost | quote }}
+  APP_PORT: {{ .Values.config.appPort | quote }}
   ENVIRONMENT: {{ .Values.config.environment | quote }}
   JWT_ALGORITHM: {{ .Values.config.jwtAlgorithm | quote }}
   JWT_EXPIRATION_MINUTES: {{ .Values.config.jwtExpirationMinutes | quote }}
-  DB_HOST: {{ .Values.database.host | quote }}
-  DB_PORT: {{ .Values.database.port | quote }}
-  DB_NAME: {{ .Values.database.name | quote }}
-  DB_USER: {{ .Values.database.user | quote }}
+  POSTGRESQL_HOST: {{ .Values.database.host | quote }}
+  POSTGRESQL_PORT: {{ .Values.database.port | quote }}
+  POSTGRESQL_DB_NAME: {{ .Values.database.name | quote }}
+  POSTGRESQL_USER: {{ .Values.database.user | quote }}

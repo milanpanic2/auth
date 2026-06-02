@@ -1,4 +1,5 @@
 import jwt
+from contextlib import asynccontextmanager
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
 from passlib.hash import bcrypt
 from sqlalchemy import select
@@ -8,16 +9,26 @@ from datetime import datetime, timedelta, timezone
 from .config import settings
 from src.models import RegisterRequest, LoginRequest, BearerTokenResponse, UserResponse
 from src.database import get_db, User
+from src.database.connection import init_db, async_engine
+from src.config.telemetry import init_telemetry
 from dependencies import get_user_management_service
 from src.services.user_management_service import UserManagementService
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    init_telemetry(app, async_engine)
+    yield
 
 
 app = FastAPI(
     title="Auth Service",
     description="Simple auth app kubernetes ingress api auth",
-    version="0.1.0")
+    version="0.1.0",
+    lifespan=lifespan)
 
-router = APIRouter(tags=["auth"])
+router = APIRouter(prefix="/api/v1", tags=["auth"])
 
 app.include_router(router)
 

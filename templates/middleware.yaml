@@ -1,13 +1,15 @@
+{{- if .Values.middleware.enabled }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: auth-verify
+  name: {{ .Chart.Name }}-verify
   namespace: {{ .Release.Namespace }}
 spec:
   forwardAuth:
-    address: http://auth.{{ .Release.Namespace }}.svc.cluster.local/verify
+    address: http://{{ .Chart.Name }}.{{ .Release.Namespace }}.svc.cluster.local/verify
     trustForwardHeader: true
     authResponseHeaders:
     - X-User-Id
     - X-Username
     - X-Email
+{{- end }}

@@ -3,8 +3,9 @@ FROM python:3.13-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 WORKDIR /app
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock alembic.ini main.py ./
 RUN uv sync --no-dev --no-install-project
+COPY db_migrations/ db_migrations/
 COPY src/ src/
 
-CMD ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "python", "main.py"]

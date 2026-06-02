@@ -2,14 +2,14 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: auth
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
   annotations:
     {{- toYaml .Values.ingress.annotations | nindent 4 }}
 spec:
   ingressClassName: traefik
   tls:
-  - secretName: auth-tls
+  - secretName: {{ .Chart.Name }}-tls
     hosts:
     - {{ .Values.ingress.host }}
   rules:
@@ -20,7 +20,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: auth
+            name: {{ .Chart.Name }}
             port:
               number: {{ .Values.service.port }}
 {{- end }}

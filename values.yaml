@@ -18,6 +18,8 @@ ingress:
     cert-manager.io/cluster-issuer: homelab-ca-issuer
 
 config:
+  appHost: "0.0.0.0"
+  appPort: "8000"
   environment: "default"
   jwtAlgorithm: "HS256"
   jwtExpirationMinutes: "1440"
@@ -36,6 +38,21 @@ resources:
   limits:
     memory: "128Mi"
     cpu: "250m"
+
+probes:
+  liveness:
+    httpGet:
+      path: /api/v1/health
+      port: 8000
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    failureThreshold: 3
+  readiness:
+    httpGet:
+      path: /api/v1/health
+      port: 8000
+    initialDelaySeconds: 5
+    periodSeconds: 5
 
 middleware:
   enabled: true

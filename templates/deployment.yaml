@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth
+  name: {{ .Chart.Name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: auth
+    app: {{ .Chart.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: auth
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: auth
+        app: {{ .Chart.Name }}
     spec:
       containers:
-      - name: auth
+      - name: {{ .Chart.Name }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
@@ -24,9 +24,9 @@ spec:
           name: http
         envFrom:
         - configMapRef:
-            name: auth-config
+            name: {{ .Chart.Name }}-config
         env:
-        - name: DB_PASSWORD
+        - name: POSTGRESQL_PASSWORD
           valueFrom:
             secretKeyRef:
               name: {{ .Values.database.secretName }}
@@ -38,3 +38,30 @@ spec:
               key: password
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        livenessProbe:
+          {{- toYaml .Values.probes.liveness | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.probes.readiness | nindent 10 }}
+      initContainers:
+      - name: init-db
+        image: postgres:16
+        env:
+          - name: PGUSER
+            value: {{ .Values.database.user | quote }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.database.secretName }}
+                key: password
+        command:
+          - sh
+          - -c
+          - |
+            psql -h {{ .Values.database.host }} -c "CREATE DATABASE {{ .Values.database.name }}" || true
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
