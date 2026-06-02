@@ -3,7 +3,7 @@ replicaCount: 1
 image:
   registry: ghcr.io/milanpanic2
   name: auth
-  tag: latest
+  tag: main
   pullPolicy: Always
 
 service:
