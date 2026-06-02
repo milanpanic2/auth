@@ -8,6 +8,7 @@ metadata:
 data:
   APP_HOST: {{ .Values.config.appHost | quote }}
   APP_PORT: {{ .Values.config.appPort | quote }}
+  DEBUG: {{ .Values.config.debug | quote }}
   ENVIRONMENT: {{ .Values.config.environment | quote }}
   JWT_ALGORITHM: {{ .Values.config.jwtAlgorithm | quote }}
   JWT_EXPIRATION_MINUTES: {{ .Values.config.jwtExpirationMinutes | quote }}

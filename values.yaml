@@ -20,6 +20,7 @@ ingress:
 config:
   appHost: "0.0.0.0"
   appPort: "8000"
+  debug: "false"
   environment: "default"
   jwtAlgorithm: "HS256"
   jwtExpirationMinutes: "1440"
