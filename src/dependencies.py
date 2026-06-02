@@ -1,5 +1,5 @@
 from fastapi import Depends
-from database.connection import get_db
+from src.database.connection import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.services import UserManagementService
 

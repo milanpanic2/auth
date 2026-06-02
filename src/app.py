@@ -11,7 +11,7 @@ from src.models import RegisterRequest, LoginRequest, BearerTokenResponse, UserR
 from src.database import get_db, User
 from src.database.connection import init_db, async_engine
 from src.config.telemetry import init_telemetry
-from dependencies import get_user_management_service
+from src.dependencies import get_user_management_service
 from src.services.user_management_service import UserManagementService
 
 
