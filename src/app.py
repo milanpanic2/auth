@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from .config import settings
 from src.models import RegisterRequest, LoginRequest, BearerTokenResponse, UserResponse
 from src.database import get_db, User
-from src.database.connection import init_db, async_engine
+from src.database.connection import init_db, sync_engine
 from src.config.telemetry import init_telemetry
 from src.dependencies import get_user_management_service
 from src.services.user_management_service import UserManagementService
@@ -18,7 +18,7 @@ from src.services.user_management_service import UserManagementService
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
-    init_telemetry(app, async_engine)
+    init_telemetry(app, sync_engine)
     yield
 
 
