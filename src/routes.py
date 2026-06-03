@@ -1,6 +1,6 @@
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-from passlib.hash import bcrypt
+import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime, timedelta, timezone
@@ -31,7 +31,7 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
 
     new_user = User(
         email = body.email,
-        password = bcrypt.hash(body.password),
+        password = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt()).decode(),
         full_name=body.full_name,
         displayed_name=body.displayed_name,
     )
@@ -54,7 +54,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
 
     db_user = result.scalar_one_or_none()
 
-    if not db_user or not bcrypt.verify(body.password, db_user.password):
+    if not db_user or not bcrypt.checkpw(body.password.encode(), db_user.password.encode()):
         raise HTTPException(401, "Failed authorizaion.")
 
     payload = {

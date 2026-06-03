@@ -4,7 +4,7 @@ from fastapi import Depends, HTTPException
 from src.database.connection import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from passlib.hash import bcrypt
+import bcrypt
 from datetime import datetime, timezone, timedelta
 
 from src.models import RegisterRequest, BearerTokenResponse
