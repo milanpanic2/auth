@@ -1,3 +1,4 @@
+import logging
 from datetime import UTC, datetime, timedelta
 
 import bcrypt
@@ -14,9 +15,12 @@ from src.services.user_management_service import UserManagementService
 
 router = APIRouter(prefix="/api/v1", tags=["auth"])
 
+logger = logging.getLogger(__name__)
+
 
 @router.post("/register", response_model=UserResponse)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
+    logger.info("Registration attempt for email: %s", body.email)
     existing_with_displayed_name = await db.execute(
             select(User)
             .where(User.displayed_name == body.displayed_name)
@@ -48,6 +52,7 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
 
 @router.post("/login", response_model=BearerTokenResponse)
 async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
+    logging.info("Login attempt with email: %s", body.email)
     result = await db.execute(
         select(User)
         .where(User.email == body.email)
@@ -57,6 +62,8 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
 
     if not db_user or not bcrypt.checkpw(body.password.encode(), db_user.password.encode()):
         raise HTTPException(401, "Failed authorizaion.")
+
+    logging.info("User with email: %s and id: %s successfully logged in", db_user.email, db_user.id)
 
     payload = {
         "sub": str(db_user.id),
