@@ -1,14 +1,15 @@
+from datetime import UTC, datetime, timedelta
+
+import bcrypt
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
-import bcrypt
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime, timedelta, timezone
 
 from src.config import settings
-from src.models import RegisterRequest, LoginRequest, BearerTokenResponse, UserResponse
-from src.database import get_db, User
+from src.database import User, get_db
 from src.dependencies import get_user_management_service
+from src.models import BearerTokenResponse, LoginRequest, RegisterRequest, UserResponse
 from src.services.user_management_service import UserManagementService
 
 router = APIRouter(prefix="/api/v1", tags=["auth"])
@@ -61,7 +62,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
         "sub": str(db_user.id),
         "username": db_user.email,
         "email": db_user.email,
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expiration_minutes),
+        "exp": datetime.now(UTC) + timedelta(minutes=settings.jwt_expiration_minutes),
     }
     token = jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
@@ -84,9 +85,9 @@ async def verify(request: Request, response: Response):
     try:
         payload = jwt.decode(auth[7:], settings.jwt_secret, algorithms=[settings.jwt_algorithm])
     except jwt.ExpiredSignatureError:
-        raise HTTPException(401, "Token expired")
+        raise HTTPException(401, "Token expired") from None
     except jwt.InvalidTokenError:
-        raise HTTPException(401, "Invalid token")
+        raise HTTPException(401, "Invalid token") from None
 
     response.headers["X-User-Id"] = payload["sub"]
     response.headers["X-Username"] = payload["username"]

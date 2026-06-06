@@ -1,5 +1,5 @@
 import uvicorn
-from sqlalchemy import create_engine, text, pool
+from sqlalchemy import create_engine, pool, text
 
 from src.config.settings import settings
 

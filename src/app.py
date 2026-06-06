@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from src.config import settings
-from src.database.connection import init_db, sync_engine
 from src.config.telemetry import init_telemetry
+from src.database.connection import init_db, sync_engine
 from src.routes import router
 
 

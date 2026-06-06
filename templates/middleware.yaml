@@ -13,3 +13,7 @@ spec:
     - X-Username
     - X-Email
 {{- end }}
+# ForwardAuth via auth service:
+# requires valid JWT to access to all services that add following annotation.
+# Format: <namespace>-<middleware-name>@kubernetescrd
+# traefik.ingress.kubernetes.io/router.middlewares: apps-auth-verify@kubernetescrd

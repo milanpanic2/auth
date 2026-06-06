@@ -1,16 +1,16 @@
 import re
+from datetime import datetime, timedelta, timezone
+
+import bcrypt
 import jwt
 from fastapi import Depends, HTTPException
-from src.database.connection import get_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-import bcrypt
-from datetime import datetime, timezone, timedelta
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.models import RegisterRequest, BearerTokenResponse
-from src.models import LoginRequest
-from src.database import User
 from src.config import settings
+from src.database import User
+from src.database.connection import get_db
+from src.models import BearerTokenResponse, LoginRequest, RegisterRequest
 
 
 class UserManagementService:

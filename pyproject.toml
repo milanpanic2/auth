@@ -23,3 +23,15 @@ dependencies = [
     "bcrypt>=4.0.0",
     "pyjwt[crypto]>=2.9.0",
 ]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "standard"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["B008"]
