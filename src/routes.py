@@ -52,7 +52,7 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
 
 @router.post("/login", response_model=BearerTokenResponse)
 async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
-    logging.info("Login attempt with email: %s", body.email)
+    logger.info("Login attempt with email: %s", body.email)
     result = await db.execute(
         select(User)
         .where(User.email == body.email)
@@ -63,7 +63,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     if not db_user or not bcrypt.checkpw(body.password.encode(), db_user.password.encode()):
         raise HTTPException(401, "Failed authorizaion.")
 
-    logging.info("User with email: %s and id: %s successfully logged in", db_user.email, db_user.id)
+    logger.info("User with email: %s and id: %s successfully logged in", db_user.email, db_user.id)
 
     payload = {
         "sub": str(db_user.id),

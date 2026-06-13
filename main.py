@@ -11,7 +11,10 @@ def ensure_database():
     )
     with engine.connect() as conn:
         conn.execution_options(isolation_level="AUTOCOMMIT")
-        exists = conn.execute(text("SELECT 1 FROM pg_database WHERE datname = :db"), {"db": settings.postgresql_db_name}).scalar()
+        exists = conn.execute(
+                text("SELECT 1 FROM pg_database WHERE datname = :db"),
+                {"db": settings.postgresql_db_name}
+            ).scalar()
         if not exists:
             conn.execute(text(f'CREATE DATABASE "{settings.postgresql_db_name}"'))
     engine.dispose()
