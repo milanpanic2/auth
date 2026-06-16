@@ -26,6 +26,11 @@ spec:
         - configMapRef:
             name: {{ .Chart.Name }}-config
         env:
+        - name: POSTGRESQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.database.secretName }}
+              key: username
         - name: POSTGRESQL_PASSWORD
           valueFrom:
             secretKeyRef:

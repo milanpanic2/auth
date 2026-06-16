@@ -30,7 +30,6 @@ database:
   host: "postgresql"
   port: "5432"
   name: "auth"
-  user: "cluster_user"
   secretName: "cluster-secret"
 
 resources:
